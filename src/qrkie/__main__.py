@@ -135,5 +135,41 @@ def batch_qr_codes(
         pass
 
 
+@cli.command(name="code")
+def generate_qr_code(
+    ctx: typer.Context,
+    data: str = typer.Argument(..., help="Data to encode in the QR code."),
+    basename: str = typer.Option("qrcode", "--output-filename", "-o"),
+    output_formats: list[str] = typer.Option(
+        ["png"],
+        "--format",
+        "-f",
+        help="Output file format(s). Can be specified multiple times.",
+    ),
+    version: str | None = typer.Option(None, "--version", "-V"),
+    styles: list[Style] | None = typer.Option([Style.square], "--style", "-S"),
+    all_styles: bool = typer.Option(False, "--all-styles", "-A"),
+    pixels: int = typer.Option(1000, "--pixels", "-p", help="PNG pixel dimensions."),
+) -> None:
+    """Generate a QR code for the given data and write to OUTPUT_FILE."""
+
+    record = URLRecord(url=data, description=basename)
+
+    if all_styles:
+        styles = list(Style)
+
+    for output_format in output_formats:
+        for style in styles:
+            qr_code = record.qrcode(version=version)
+            filename = record.filename(
+                extension=output_format,
+                version=qr_code.version,
+                style=style.name,
+            )
+            img = qr_code.make_image(module_drawer=style.drawer)
+
+            img.save(filename)
+
+
 if __name__ == "__main__":
     sys.exit(cli())
