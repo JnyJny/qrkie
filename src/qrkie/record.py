@@ -62,13 +62,13 @@ class URLRecord:
 
     def filename(
         self,
-        prefix: str,
         extension: str,
+        prefix: str | None = None,
         version: str | None = None,
         style: str | None = None,
         sep: str = "-",
     ) -> str:
-        """Return a filename for the record given a prefix and extension."""
+        """Return a filename for the record."""
 
         if extension.startswith("."):
             extension = extension[1:]
