@@ -11,6 +11,8 @@ dependencies = [
     "loguru",
     "typer",
     "pydantic_settings",
+    "segno>=1.6.6",
+    "qrcode[pil]>=8.2",
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
